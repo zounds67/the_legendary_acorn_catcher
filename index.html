@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totoro's Acorn Catch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <h1>Totoro's Acorn Catch</h1>
+        <div id="score-display">Score: <span id="score">0</span></div>
+        <div id="lives-display">Lives: <span id="lives">3</span></div>
+        <div id="powerup-display"></div>
+        <canvas id="game-canvas" width="600" height="400"></canvas>
+        <div id="game-over" class="hidden">
+            <h2>Game Over!</h2>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <button id="restart-btn">Play Again</button>
+        </div>
+        <div id="instructions">
+            <p>Use <strong>← →</strong> arrow keys to move Totoro</p>
+            <p>🌰 Catch acorns for points!</p>
+            <p>💨 Avoid the dust mites!</p>
+            <p>🚌 Grab the Cat Bus for speed boost!</p>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
