@@ -392,7 +392,7 @@
       this.difficultyTimer++;
       if (this.difficultyTimer >= 200) {
         this.difficulty += 0.2;
-        this.spawnInterval = Math.max(30, this.spawnInterval - 3);
+        this.spawnInterval = Math.max(4, this.spawnInterval - 3);
         this.difficultyTimer = 0;
       }
       // Call YOUR function to move objects down!

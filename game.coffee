@@ -343,7 +343,7 @@ class Game
     @difficultyTimer++
     if @difficultyTimer >= 200
       @difficulty += 0.2
-      @spawnInterval = Math.max(30, @spawnInterval - 3)
+      @spawnInterval = Math.max(4, @spawnInterval - 3)
       @difficultyTimer = 0
 
     # Call YOUR function to move objects down!
