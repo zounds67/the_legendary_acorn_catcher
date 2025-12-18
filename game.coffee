@@ -189,8 +189,8 @@ class Game
     # Hint: Check if @totoro.x is greater than @canvas.width - @totoro.width (too far right)
     if @totoro.x < 0
       @totoro.x = 0
-    if @totoro.x > @canvas.width
-      @totoro.x = @canvas.width
+    if @totoro.x > @canvas.width - @totoro.width
+      @totoro.x = @canvas.width - @totoro.width
 
   # ============================================================
   # FUNCTION 3: Move Falling Objects Down
@@ -403,9 +403,9 @@ class Game
 
     # Increase difficulty over time (done for you)
     @difficultyTimer++
-    if @difficultyTimer >= 600
+    if @difficultyTimer >= 200
       @difficulty += 0.2
-      @spawnInterval = Math.max(30, @spawnInterval - 3)
+      @spawnInterval = Math.max(4, @spawnInterval - 3)
       @difficultyTimer = 0
 
     # Call YOUR function to move objects down!
@@ -445,6 +445,7 @@ class Game
     @gameOver = true
     @finalScoreElement.textContent = @score
     @gameOverElement.classList.remove('hidden')
+    @powerupDisplay.textContent = ''
 
     # Show leaderboard UI and enable submission
     @submitScoreBtn.disabled = false
@@ -551,7 +552,7 @@ class Game
     y = @totoro.y
 
     # Body - gray oval
-    @ctx.fillStyle = if @totoro.powered then '#6B8E23' else '#696969'
+    @ctx.fillStyle = if @totoro.powered then '#DAA520' else '#696969'
     @ctx.beginPath()
     @ctx.ellipse(x + 40, y + 40, 38, 35, 0, 0, Math.PI * 2)
     @ctx.fill()
@@ -570,7 +571,7 @@ class Game
       @ctx.fill()
 
     # Ears
-    @ctx.fillStyle = if @totoro.powered then '#6B8E23' else '#696969'
+    @ctx.fillStyle = if @totoro.powered then '#DAA520' else '#696969'
     @ctx.beginPath()
     @ctx.moveTo(x + 15, y + 10)
     @ctx.lineTo(x + 25, y - 5)
