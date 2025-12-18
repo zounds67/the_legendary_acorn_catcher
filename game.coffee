@@ -6,6 +6,50 @@
 #
 # Good luck and have fun!
 
+# ============================================================
+# LootLocker Leaderboard Class - Simple API wrapper
+# ============================================================
+class LootLocker
+  constructor: (@apiKey, @leaderboardKey, @apiDomain) ->
+    @sessionToken = null
+
+  init: ->
+    fetch "#{@apiDomain}/game/v2/session/guest",
+      method: "POST"
+      headers: { "Content-Type": "application/json" }
+      body: JSON.stringify { game_key: @apiKey, game_version: "1.0.0" }
+    .then (response) -> response.json()
+    .then (data) =>
+      if data.session_token
+        @sessionToken = data.session_token
+      else
+        throw new Error(data.message or "No session token received")
+      return data
+
+  setName: (name) ->
+    fetch "#{@apiDomain}/game/player/name",
+      method: "PATCH"
+      headers:
+        "Content-Type": "application/json"
+        "x-session-token": @sessionToken
+      body: JSON.stringify { name: name }
+
+  submitScore: (score) ->
+    fetch "#{@apiDomain}/game/leaderboards/#{@leaderboardKey}/submit",
+      method: "POST"
+      headers:
+        "Content-Type": "application/json"
+        "x-session-token": @sessionToken
+      body: JSON.stringify { score: score }
+    .then (response) -> response.json()
+
+  getScores: ->
+    fetch "#{@apiDomain}/game/leaderboards/#{@leaderboardKey}/list?count=10",
+      method: "GET"
+      headers: { "x-session-token": @sessionToken }
+    .then (response) -> response.json()
+    .then (data) -> data.items or []
+
 class Game
   constructor: ->
     @canvas = document.getElementById('game-canvas')
@@ -17,9 +61,27 @@ class Game
     @finalScoreElement = document.getElementById('final-score')
     @restartBtn = document.getElementById('restart-btn')
 
+    # LootLocker setup
+    @lootlocker = new LootLocker(
+      'dev_d454f8a490d943d9acaa1b88507f9e08',
+      'acorncatcher',
+      'https://tgb2om7o.api.lootlocker.io'
+    )
+    @playerName = localStorage.getItem('playerName') or ''
+
+    # Leaderboard UI elements
+    @leaderboardList = document.getElementById('leaderboard-list')
+    @nameInput = document.getElementById('player-name-input')
+    @submitScoreBtn = document.getElementById('submit-score-btn')
+    @leaderboardStatus = document.getElementById('leaderboard-status')
+
     @init()
     @setupControls()
     @restartBtn.addEventListener 'click', => @restart()
+    @submitScoreBtn?.addEventListener 'click', => @handleSubmitScore()
+
+    # Initialize LootLocker session
+    @initLeaderboard()
 
   init: ->
     @score = 0
@@ -384,9 +446,83 @@ class Game
     @finalScoreElement.textContent = @score
     @gameOverElement.classList.remove('hidden')
 
+    # Show leaderboard UI and enable submission
+    @submitScoreBtn.disabled = false
+    @submitScoreBtn.style.display = 'inline-block'
+    @nameInput.disabled = false
+    @nameInput.value = @playerName
+    @leaderboardStatus.textContent = ''
+
+    # Refresh leaderboard display
+    @refreshLeaderboard()
+
   restart: ->
     @init()
     @gameLoop()
+
+  # ============================================================
+  # LootLocker Leaderboard Methods (Simplified)
+  # ============================================================
+
+  initLeaderboard: ->
+    @lootlocker.init()
+    .then => @refreshLeaderboard()
+    .catch => @leaderboardList.innerHTML = '<li class="error">Could not connect to leaderboard</li>'
+
+  handleSubmitScore: ->
+    return unless @lootlocker.sessionToken
+
+    playerName = @nameInput.value.trim() or 'Anonymous'
+    localStorage.setItem 'playerName', playerName
+
+    @submitScoreBtn.disabled = true
+    @leaderboardStatus.textContent = 'Submitting score...'
+
+    @lootlocker.setName(playerName)
+    .then => @lootlocker.submitScore(@score)
+    .then (result) =>
+      @leaderboardStatus.textContent = "Score submitted! Rank: ##{result.rank}"
+      @submitScoreBtn.style.display = 'none'
+      @nameInput.disabled = true
+      @refreshLeaderboard()
+    .catch =>
+      @leaderboardStatus.textContent = 'Failed to submit score'
+      @submitScoreBtn.disabled = false
+
+  refreshLeaderboard: ->
+    return unless @lootlocker.sessionToken
+
+    @lootlocker.getScores()
+    .then (entries) => @displayLeaderboard(entries)
+    .catch => @leaderboardList.innerHTML = '<li class="error">Could not load leaderboard</li>'
+
+  displayLeaderboard: (entries) ->
+    @leaderboardList.innerHTML = ''
+
+    if entries.length is 0
+      @leaderboardList.innerHTML = '<li class="no-scores">No scores yet. Be the first!</li>'
+      return
+
+    for entry in entries
+      li = document.createElement 'li'
+      li.className = 'leaderboard-entry'
+
+      rankSpan = document.createElement 'span'
+      rankSpan.className = 'rank'
+      rankSpan.textContent = "##{entry.rank}"
+
+      nameSpan = document.createElement 'span'
+      nameSpan.className = 'player-name'
+      nameSpan.textContent = entry.player?.name or 'Anonymous'
+
+      scoreSpan = document.createElement 'span'
+      scoreSpan.className = 'player-score'
+      scoreSpan.textContent = entry.score
+
+      li.appendChild rankSpan
+      li.appendChild nameSpan
+      li.appendChild scoreSpan
+      @leaderboardList.appendChild li
 
   # ============================================================
   # All the drawing code below - you don't need to change this!
