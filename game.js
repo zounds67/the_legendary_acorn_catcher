@@ -390,7 +390,7 @@
       }
       // Increase difficulty over time (done for you)
       this.difficultyTimer++;
-      if (this.difficultyTimer >= 600) {
+      if (this.difficultyTimer >= 200) {
         this.difficulty += 0.2;
         this.spawnInterval = Math.max(30, this.spawnInterval - 3);
         this.difficultyTimer = 0;

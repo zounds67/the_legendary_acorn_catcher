@@ -341,7 +341,7 @@ class Game
 
     # Increase difficulty over time (done for you)
     @difficultyTimer++
-    if @difficultyTimer >= 600
+    if @difficultyTimer >= 200
       @difficulty += 0.2
       @spawnInterval = Math.max(30, @spawnInterval - 3)
       @difficultyTimer = 0
@@ -384,7 +384,7 @@ class Game
     @finalScoreElement.textContent = @score
     @gameOverElement.classList.remove('hidden')
     @powerupDisplay.textContent = ''
-    
+
   restart: ->
     @init()
     @gameLoop()
