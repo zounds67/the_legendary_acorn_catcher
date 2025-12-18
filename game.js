@@ -240,8 +240,8 @@
       if (this.totoro.x < 0) {
         this.totoro.x = 0;
       }
-      if (this.totoro.x > this.canvas.width) {
-        return this.totoro.x = this.canvas.width;
+      if (this.totoro.x > this.canvas.width - this.totoro.width) {
+        return this.totoro.x = this.canvas.width - this.totoro.width;
       }
     }
 
@@ -483,9 +483,9 @@
       }
       // Increase difficulty over time (done for you)
       this.difficultyTimer++;
-      if (this.difficultyTimer >= 600) {
+      if (this.difficultyTimer >= 200) {
         this.difficulty += 0.2;
-        this.spawnInterval = Math.max(30, this.spawnInterval - 3);
+        this.spawnInterval = Math.max(4, this.spawnInterval - 3);
         this.difficultyTimer = 0;
       }
       // Call YOUR function to move objects down!
@@ -537,6 +537,7 @@
       this.gameOver = true;
       this.finalScoreElement.textContent = this.score;
       this.gameOverElement.classList.remove('hidden');
+      this.powerupDisplay.textContent = '';
       // Show leaderboard UI and enable submission
       this.submitScoreBtn.disabled = false;
       this.submitScoreBtn.style.display = 'inline-block';
@@ -596,33 +597,63 @@
       });
     }
 
+    // ============================================================
+    // FUNCTION 7: Show the Leaderboard
+    // ============================================================
+    // This function shows the top scores on the leaderboard!
+
+    // HOW IT WORKS:
+    // - 'entries' is a list of score entries from other players
+    // - Each entry has:
+    //     entry.rank = their position (1 = first place, 2 = second, etc)
+    //     entry.player.name = the player's name
+    //     entry.score = how many points they got
+    // - @addToLeaderboard(rank, name, score) adds one line to the leaderboard
+
+    // WHAT TO DO:
+    // - Go through each entry in the list
+    // - Get the rank, name, and score from each entry
+    // - Call @addToLeaderboard to display it
+
+    // EXAMPLE:
+    //   for entry in entries
+    //     rank = entry.rank
+    //     name = entry.player.name
+    //     # now call @addToLeaderboard with rank, name, and score
+    // ============================================================
     displayLeaderboard(entries) {
-      var entry, j, len, li, nameSpan, rankSpan, ref, results, scoreSpan;
       this.leaderboardList.innerHTML = '';
       if (entries.length === 0) {
         this.leaderboardList.innerHTML = '<li class="no-scores">No scores yet. Be the first!</li>';
-        return;
       }
-      results = [];
-      for (j = 0, len = entries.length; j < len; j++) {
-        entry = entries[j];
-        li = document.createElement('li');
-        li.className = 'leaderboard-entry';
-        rankSpan = document.createElement('span');
-        rankSpan.className = 'rank';
-        rankSpan.textContent = `#${entry.rank}`;
-        nameSpan = document.createElement('span');
-        nameSpan.className = 'player-name';
-        nameSpan.textContent = ((ref = entry.player) != null ? ref.name : void 0) || 'Anonymous';
-        scoreSpan = document.createElement('span');
-        scoreSpan.className = 'player-score';
-        scoreSpan.textContent = entry.score;
-        li.appendChild(rankSpan);
-        li.appendChild(nameSpan);
-        li.appendChild(scoreSpan);
-        results.push(this.leaderboardList.appendChild(li));
-      }
-      return results;
+    }
+
+    // YOUR CODE HERE
+    // Hint: Use "for entry in entries" to loop through all the scores
+    // Hint: Get the rank with entry.rank
+    // Hint: Get the name with entry.player.name
+    // Hint: Get the score with entry.score
+    // Hint: Call @addToLeaderboard(rank, name, score) to show each one
+
+      // This helper function adds one entry to the leaderboard display
+    // (You don't need to change this - just call it from above!)
+    addToLeaderboard(rank, name, score) {
+      var li, nameSpan, rankSpan, scoreSpan;
+      li = document.createElement('li');
+      li.className = 'leaderboard-entry';
+      rankSpan = document.createElement('span');
+      rankSpan.className = 'rank';
+      rankSpan.textContent = `#${rank}`;
+      nameSpan = document.createElement('span');
+      nameSpan.className = 'player-name';
+      nameSpan.textContent = name || 'Anonymous';
+      scoreSpan = document.createElement('span');
+      scoreSpan.className = 'player-score';
+      scoreSpan.textContent = score;
+      li.appendChild(rankSpan);
+      li.appendChild(nameSpan);
+      li.appendChild(scoreSpan);
+      return this.leaderboardList.appendChild(li);
     }
 
     // ============================================================
@@ -665,7 +696,7 @@
       x = this.totoro.x;
       y = this.totoro.y;
       // Body - gray oval
-      this.ctx.fillStyle = this.totoro.powered ? '#6B8E23' : '#696969';
+      this.ctx.fillStyle = this.totoro.powered ? '#DAA520' : '#696969';
       this.ctx.beginPath();
       this.ctx.ellipse(x + 40, y + 40, 38, 35, 0, 0, Math.PI * 2);
       this.ctx.fill();
@@ -682,7 +713,7 @@
         this.ctx.fill();
       }
       // Ears
-      this.ctx.fillStyle = this.totoro.powered ? '#6B8E23' : '#696969';
+      this.ctx.fillStyle = this.totoro.powered ? '#DAA520' : '#696969';
       this.ctx.beginPath();
       this.ctx.moveTo(x + 15, y + 10);
       this.ctx.lineTo(x + 25, y - 5);

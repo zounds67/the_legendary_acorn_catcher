@@ -497,6 +497,30 @@ class Game
     .then (entries) => @displayLeaderboard(entries)
     .catch => @leaderboardList.innerHTML = '<li class="error">Could not load leaderboard</li>'
 
+  # ============================================================
+  # FUNCTION 7: Show the Leaderboard
+  # ============================================================
+  # This function shows the top scores on the leaderboard!
+  #
+  # HOW IT WORKS:
+  # - 'entries' is a list of score entries from other players
+  # - Each entry has:
+  #     entry.rank = their position (1 = first place, 2 = second, etc)
+  #     entry.player.name = the player's name
+  #     entry.score = how many points they got
+  # - @addToLeaderboard(rank, name, score) adds one line to the leaderboard
+  #
+  # WHAT TO DO:
+  # - Go through each entry in the list
+  # - Get the rank, name, and score from each entry
+  # - Call @addToLeaderboard to display it
+  #
+  # EXAMPLE:
+  #   for entry in entries
+  #     rank = entry.rank
+  #     name = entry.player.name
+  #     # now call @addToLeaderboard with rank, name, and score
+  # ============================================================
   displayLeaderboard: (entries) ->
     @leaderboardList.innerHTML = ''
 
@@ -504,26 +528,35 @@ class Game
       @leaderboardList.innerHTML = '<li class="no-scores">No scores yet. Be the first!</li>'
       return
 
-    for entry in entries
-      li = document.createElement 'li'
-      li.className = 'leaderboard-entry'
+    # YOUR CODE HERE
+    # Hint: Use "for entry in entries" to loop through all the scores
+    # Hint: Get the rank with entry.rank
+    # Hint: Get the name with entry.player.name
+    # Hint: Get the score with entry.score
+    # Hint: Call @addToLeaderboard(rank, name, score) to show each one
 
-      rankSpan = document.createElement 'span'
-      rankSpan.className = 'rank'
-      rankSpan.textContent = "##{entry.rank}"
+  # This helper function adds one entry to the leaderboard display
+  # (You don't need to change this - just call it from above!)
+  addToLeaderboard: (rank, name, score) ->
+    li = document.createElement 'li'
+    li.className = 'leaderboard-entry'
 
-      nameSpan = document.createElement 'span'
-      nameSpan.className = 'player-name'
-      nameSpan.textContent = entry.player?.name or 'Anonymous'
+    rankSpan = document.createElement 'span'
+    rankSpan.className = 'rank'
+    rankSpan.textContent = "##{rank}"
 
-      scoreSpan = document.createElement 'span'
-      scoreSpan.className = 'player-score'
-      scoreSpan.textContent = entry.score
+    nameSpan = document.createElement 'span'
+    nameSpan.className = 'player-name'
+    nameSpan.textContent = name or 'Anonymous'
 
-      li.appendChild rankSpan
-      li.appendChild nameSpan
-      li.appendChild scoreSpan
-      @leaderboardList.appendChild li
+    scoreSpan = document.createElement 'span'
+    scoreSpan.className = 'player-score'
+    scoreSpan.textContent = score
+
+    li.appendChild rankSpan
+    li.appendChild nameSpan
+    li.appendChild scoreSpan
+    @leaderboardList.appendChild li
 
   # ============================================================
   # All the drawing code below - you don't need to change this!
