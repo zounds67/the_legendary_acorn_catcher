@@ -492,7 +492,7 @@
       x = this.totoro.x;
       y = this.totoro.y;
       // Body - gray oval
-      this.ctx.fillStyle = this.totoro.powered ? '#6B8E23' : '#696969';
+      this.ctx.fillStyle = this.totoro.powered ? '#DAA520' : '#696969';
       this.ctx.beginPath();
       this.ctx.ellipse(x + 40, y + 40, 38, 35, 0, 0, Math.PI * 2);
       this.ctx.fill();
@@ -509,7 +509,7 @@
         this.ctx.fill();
       }
       // Ears
-      this.ctx.fillStyle = this.totoro.powered ? '#6B8E23' : '#696969';
+      this.ctx.fillStyle = this.totoro.powered ? '#DAA520' : '#696969';
       this.ctx.beginPath();
       this.ctx.moveTo(x + 15, y + 10);
       this.ctx.lineTo(x + 25, y - 5);

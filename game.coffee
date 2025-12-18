@@ -416,7 +416,7 @@ class Game
     y = @totoro.y
 
     # Body - gray oval
-    @ctx.fillStyle = if @totoro.powered then '#6B8E23' else '#696969'
+    @ctx.fillStyle = if @totoro.powered then '#DAA520' else '#696969'
     @ctx.beginPath()
     @ctx.ellipse(x + 40, y + 40, 38, 35, 0, 0, Math.PI * 2)
     @ctx.fill()
@@ -435,7 +435,7 @@ class Game
       @ctx.fill()
 
     # Ears
-    @ctx.fillStyle = if @totoro.powered then '#6B8E23' else '#696969'
+    @ctx.fillStyle = if @totoro.powered then '#DAA520' else '#696969'
     @ctx.beginPath()
     @ctx.moveTo(x + 15, y + 10)
     @ctx.lineTo(x + 25, y - 5)
