@@ -147,8 +147,8 @@
       if (this.totoro.x < 0) {
         this.totoro.x = 0;
       }
-      if (this.totoro.x > this.canvas.width) {
-        return this.totoro.x = this.canvas.width;
+      if (this.totoro.x > this.canvas.width - this.totoro.width) {
+        return this.totoro.x = this.canvas.width - this.totoro.width;
       }
     }
 
@@ -269,20 +269,19 @@
       //  powerTimer: 0
       if (obj.type === 'acorn') {
         this.score = this.score + 10;
-        this.updateDisplay();
       }
       if (obj.type === 'dustmite') {
         this.lives = this.lives - 1;
-        this.updateDisplay();
-        if (this.lives === 0) {
-          this.endGame();
-        }
       }
       if (obj.type === 'catbus') {
         this.totoro.powered = true;
         this.totoro.speed = this.totoro.speed * 2;
-        this.totoro.powerTimer = 500;
-        return this.powerupDisplay.textContent = 'Cat Bus Speed!';
+        this.totoro.powerTimer = 1000;
+        this.powerupDisplay.textContent = 'Cat Bus Speed!';
+      }
+      this.updateDisplay();
+      if (this.lives === 0) {
+        return this.endGame();
       }
     }
 
@@ -444,7 +443,8 @@
     endGame() {
       this.gameOver = true;
       this.finalScoreElement.textContent = this.score;
-      return this.gameOverElement.classList.remove('hidden');
+      this.gameOverElement.classList.remove('hidden');
+      return this.powerupDisplay.textContent = '';
     }
 
     restart() {

@@ -127,8 +127,8 @@ class Game
     # Hint: Check if @totoro.x is greater than @canvas.width - @totoro.width (too far right)
     if @totoro.x < 0
       @totoro.x = 0
-    if @totoro.x > @canvas.width
-      @totoro.x = @canvas.width
+    if @totoro.x > @canvas.width - @totoro.width
+      @totoro.x = @canvas.width - @totoro.width
 
   # ============================================================
   # FUNCTION 3: Move Falling Objects Down
@@ -383,7 +383,8 @@ class Game
     @gameOver = true
     @finalScoreElement.textContent = @score
     @gameOverElement.classList.remove('hidden')
-
+    @powerupDisplay.textContent = ''
+    
   restart: ->
     @init()
     @gameLoop()
