@@ -144,3 +144,176 @@ h1 {
 #game-container {
     position: relative;
 }
+
+/* Name Input Section */
+#name-input-section {
+    margin: 15px 0;
+}
+
+#name-input-section label {
+    display: block;
+    margin-bottom: 5px;
+    color: #a0aec0;
+    font-size: 0.9em;
+}
+
+#player-name-input {
+    padding: 10px 15px;
+    font-size: 1em;
+    border: 2px solid #4a5568;
+    border-radius: 8px;
+    background: #2d3748;
+    color: white;
+    width: 200px;
+    text-align: center;
+}
+
+#player-name-input:focus {
+    outline: none;
+    border-color: #48bb78;
+}
+
+#player-name-input::placeholder {
+    color: #718096;
+}
+
+/* Leaderboard Status */
+#leaderboard-status {
+    min-height: 20px;
+    color: #68d391;
+    font-size: 0.95em;
+    margin: 10px 0;
+}
+
+/* Game Over Buttons */
+#game-over-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+#submit-score-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+#submit-score-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+#submit-score-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Leaderboard Container */
+#leaderboard {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #4a5568;
+}
+
+#leaderboard h3 {
+    color: #e2e8f0;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+#leaderboard-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+/* Leaderboard Entries */
+.leaderboard-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 4px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.leaderboard-entry:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.leaderboard-entry.current-player {
+    background: rgba(72, 187, 120, 0.3);
+    border: 1px solid #48bb78;
+}
+
+.leaderboard-entry .rank {
+    font-weight: bold;
+    color: #a0aec0;
+    width: 40px;
+    text-align: left;
+}
+
+.leaderboard-entry .player-name {
+    flex: 1;
+    text-align: left;
+    color: #e2e8f0;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.leaderboard-entry .player-score {
+    font-weight: bold;
+    color: #68d391;
+    min-width: 60px;
+    text-align: right;
+}
+
+/* Top 3 Special Styling */
+.leaderboard-entry:nth-child(1) .rank { color: #ffd700; }
+.leaderboard-entry:nth-child(2) .rank { color: #c0c0c0; }
+.leaderboard-entry:nth-child(3) .rank { color: #cd7f32; }
+
+/* Loading and Error States */
+#leaderboard-list .loading,
+#leaderboard-list .error,
+#leaderboard-list .no-scores {
+    color: #a0aec0;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}
+
+#leaderboard-list .error {
+    color: #fc8181;
+}
+
+/* Scrollbar Styling for Leaderboard */
+#leaderboard-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#leaderboard-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+#leaderboard-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+#leaderboard-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}

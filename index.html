@@ -16,7 +16,36 @@
         <div id="game-over" class="hidden">
             <h2>Game Over!</h2>
             <p>Final Score: <span id="final-score">0</span></p>
-            <button id="restart-btn">Play Again</button>
+
+            <!-- Name Input Section -->
+            <div id="name-input-section">
+                <label for="player-name-input">Your Name:</label>
+                <input type="text" id="player-name-input"
+                       placeholder="Enter your name"
+                       maxlength="25"
+                       autocomplete="off">
+                <div style="font-size: 15px"> 
+                    Warning! If you change your name in the same browser session. 
+                    All your scores will change to that new name!"
+                </div>
+            </div>
+
+            <!-- Leaderboard Status -->
+            <p id="leaderboard-status"></p>
+
+            <!-- Action Buttons -->
+            <div id="game-over-buttons">
+                <button id="submit-score-btn">Submit Score</button>
+                <button id="restart-btn">Play Again</button>
+            </div>
+
+            <!-- Leaderboard Display -->
+            <div id="leaderboard">
+                <h3>Top Scores (Only keeps 1 top score per player)</h3>
+                <ul id="leaderboard-list">
+                    <li class="loading">Loading...</li>
+                </ul>
+            </div>
         </div>
         <div id="instructions">
             <p>Use <strong>← →</strong> arrow keys to move Totoro</p>

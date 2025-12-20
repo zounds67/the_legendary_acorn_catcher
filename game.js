@@ -7,10 +7,88 @@
   // Look for "YOUR CODE HERE" to find where to write your code.
 
   // Good luck and have fun!
-  var Game;
+
+  // ============================================================
+  // LootLocker Leaderboard Class - Simple API wrapper
+  // ============================================================
+  var Game, LootLocker;
+
+  LootLocker = class LootLocker {
+    constructor(apiKey, leaderboardKey, apiDomain) {
+      this.apiKey = apiKey;
+      this.leaderboardKey = leaderboardKey;
+      this.apiDomain = apiDomain;
+      this.sessionToken = null;
+    }
+
+    init() {
+      return fetch(`${this.apiDomain}/game/v2/session/guest`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          game_key: this.apiKey,
+          game_version: "1.0.0"
+        })
+      }).then(function(response) {
+        return response.json();
+      }).then((data) => {
+        if (data.session_token) {
+          this.sessionToken = data.session_token;
+        } else {
+          throw new Error(data.message || "No session token received");
+        }
+        return data;
+      });
+    }
+
+    setName(name) {
+      return fetch(`${this.apiDomain}/game/player/name`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-session-token": this.sessionToken
+        },
+        body: JSON.stringify({
+          name: name
+        })
+      });
+    }
+
+    submitScore(score) {
+      return fetch(`${this.apiDomain}/game/leaderboards/${this.leaderboardKey}/submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-session-token": this.sessionToken
+        },
+        body: JSON.stringify({
+          score: score
+        })
+      }).then(function(response) {
+        return response.json();
+      });
+    }
+
+    getScores() {
+      return fetch(`${this.apiDomain}/game/leaderboards/${this.leaderboardKey}/list?count=10`, {
+        method: "GET",
+        headers: {
+          "x-session-token": this.sessionToken
+        }
+      }).then(function(response) {
+        return response.json();
+      }).then(function(data) {
+        return data.items || [];
+      });
+    }
+
+  };
 
   Game = class Game {
     constructor() {
+      var ref;
       this.gameLoop = this.gameLoop.bind(this);
       this.canvas = document.getElementById('game-canvas');
       this.ctx = this.canvas.getContext('2d');
@@ -20,11 +98,26 @@
       this.gameOverElement = document.getElementById('game-over');
       this.finalScoreElement = document.getElementById('final-score');
       this.restartBtn = document.getElementById('restart-btn');
+      // LootLocker setup
+      this.lootlocker = new LootLocker('dev_d454f8a490d943d9acaa1b88507f9e08', 'acorncatcher', 'https://tgb2om7o.api.lootlocker.io');
+      this.playerName = localStorage.getItem('playerName') || '';
+      // Leaderboard UI elements
+      this.leaderboardList = document.getElementById('leaderboard-list');
+      this.nameInput = document.getElementById('player-name-input');
+      this.submitScoreBtn = document.getElementById('submit-score-btn');
+      this.leaderboardStatus = document.getElementById('leaderboard-status');
       this.init();
       this.setupControls();
       this.restartBtn.addEventListener('click', () => {
         return this.restart();
       });
+      if ((ref = this.submitScoreBtn) != null) {
+        ref.addEventListener('click', () => {
+          return this.handleSubmitScore();
+        });
+      }
+      // Initialize LootLocker session
+      this.initLeaderboard();
     }
 
     init() {
@@ -444,12 +537,133 @@
       this.gameOver = true;
       this.finalScoreElement.textContent = this.score;
       this.gameOverElement.classList.remove('hidden');
-      return this.powerupDisplay.textContent = '';
+      this.powerupDisplay.textContent = '';
+      // Show leaderboard UI and enable submission
+      this.submitScoreBtn.disabled = false;
+      this.submitScoreBtn.style.display = 'inline-block';
+      this.nameInput.disabled = false;
+      this.nameInput.value = this.playerName;
+      this.leaderboardStatus.textContent = '';
+      // Refresh leaderboard display
+      return this.refreshLeaderboard();
     }
 
     restart() {
       this.init();
       return this.gameLoop();
+    }
+
+    // ============================================================
+    // LootLocker Leaderboard Methods (Simplified)
+    // ============================================================
+    initLeaderboard() {
+      return this.lootlocker.init().then(() => {
+        return this.refreshLeaderboard();
+      }).catch(() => {
+        return this.leaderboardList.innerHTML = '<li class="error">Could not connect to leaderboard</li>';
+      });
+    }
+
+    handleSubmitScore() {
+      var playerName;
+      if (!this.lootlocker.sessionToken) {
+        return;
+      }
+      playerName = this.nameInput.value.trim() || 'Anonymous';
+      localStorage.setItem('playerName', playerName);
+      this.submitScoreBtn.disabled = true;
+      this.leaderboardStatus.textContent = 'Submitting score...';
+      return this.lootlocker.setName(playerName).then(() => {
+        return this.lootlocker.submitScore(this.score);
+      }).then((result) => {
+        this.leaderboardStatus.textContent = `Score submitted! Rank: #${result.rank}`;
+        this.submitScoreBtn.style.display = 'none';
+        this.nameInput.disabled = true;
+        return this.refreshLeaderboard();
+      }).catch(() => {
+        this.leaderboardStatus.textContent = 'Failed to submit score';
+        return this.submitScoreBtn.disabled = false;
+      });
+    }
+
+    refreshLeaderboard() {
+      if (!this.lootlocker.sessionToken) {
+        return;
+      }
+      return this.lootlocker.getScores().then((entries) => {
+        return this.displayLeaderboard(entries);
+      }).catch(() => {
+        return this.leaderboardList.innerHTML = '<li class="error">Could not load leaderboard</li>';
+      });
+    }
+
+    // ============================================================
+    // FUNCTION 7: Show the Leaderboard
+    // ============================================================
+    // This function shows the top scores on the leaderboard!
+
+    // HOW IT WORKS:
+    // - 'entries' is a list of score entries from other players
+    // - Each entry has:
+    //     entry.rank = their position (1 = first place, 2 = second, etc)
+    //     entry.player.name = the player's name
+    //     entry.score = how many points they got
+    // - @addToLeaderboard(rank, name, score) adds one line to the leaderboard
+
+    // WHAT TO DO:
+    // - Go through each entry in the list
+    // - Get the rank, name, and score from each entry
+    // - Call @addToLeaderboard to display it
+
+    // EXAMPLE:
+    //   for entry in entries
+    //     rank = entry.rank
+    //     name = entry.player.name
+    //     # now call @addToLeaderboard with rank, name, and score
+    // ============================================================
+    displayLeaderboard(entries) {
+      var e, j, len, pn, rank, results, score;
+      this.leaderboardList.innerHTML = '';
+      if (entries.length === 0) {
+        this.leaderboardList.innerHTML = '<li class="no-scores">No scores yet. Be the first!</li>';
+        return;
+      }
+// YOUR CODE HERE
+// Hint: Use "for entry in entries" to loop through all the scores
+// Hint: Get the rank with entry.rank
+// Hint: Get the name with entry.player.name
+// Hint: Get the score with entry.score
+// Hint: Call @addToLeaderboard(rank, name, score) to show each one
+      results = [];
+      for (j = 0, len = entries.length; j < len; j++) {
+        e = entries[j];
+        rank = e.rank;
+        pn = e.player.name;
+        score = e.score;
+        results.push(this.addToLeaderboard(rank, pn, score));
+      }
+      return results;
+    }
+
+    // This helper function adds one entry to the leaderboard display
+    // (You don't need to change this - just call it from above!)
+    addToLeaderboard(rank, name, score) {
+      var li, nameSpan, rankSpan, scoreSpan;
+      li = document.createElement('li');
+      li.className = 'leaderboard-entry';
+      rankSpan = document.createElement('span');
+      rankSpan.className = 'rank';
+      rankSpan.textContent = `#${rank}`;
+      nameSpan = document.createElement('span');
+      nameSpan.className = 'player-name';
+      nameSpan.textContent = name || 'Anonymous';
+      scoreSpan = document.createElement('span');
+      scoreSpan.className = 'player-score';
+      scoreSpan.textContent = score;
+      li.appendChild(rankSpan);
+      li.appendChild(nameSpan);
+      li.appendChild(scoreSpan);
+      return this.leaderboardList.appendChild(li);
     }
 
     // ============================================================
