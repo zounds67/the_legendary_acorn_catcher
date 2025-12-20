@@ -22,8 +22,12 @@
                 <label for="player-name-input">Your Name:</label>
                 <input type="text" id="player-name-input"
                        placeholder="Enter your name"
-                       maxlength="20"
+                       maxlength="25"
                        autocomplete="off">
+                <div style="font-size: 15px"> 
+                    Warning! If you change your name in the same browser session. 
+                    All your scores will change to that new name!"
+                </div>
             </div>
 
             <!-- Leaderboard Status -->
@@ -37,7 +41,7 @@
 
             <!-- Leaderboard Display -->
             <div id="leaderboard">
-                <h3>Top Scores</h3>
+                <h3>Top Scores (Only keeps 1 top score per player)</h3>
                 <ul id="leaderboard-list">
                     <li class="loading">Loading...</li>
                 </ul>
