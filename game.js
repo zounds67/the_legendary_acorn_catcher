@@ -101,6 +101,8 @@
       // LootLocker setup
       this.lootlocker = new LootLocker('dev_d454f8a490d943d9acaa1b88507f9e08', 'acorncatcher', 'https://tgb2om7o.api.lootlocker.io');
       this.playerName = localStorage.getItem('playerName') || '';
+      this.registeredName = this.playerName; // The name they've already submitted scores with
+      
       // Leaderboard UI elements
       this.leaderboardList = document.getElementById('leaderboard-list');
       this.nameInput = document.getElementById('player-name-input');
@@ -565,17 +567,25 @@
     }
 
     handleSubmitScore() {
-      var playerName;
+      var nameChanged, playerName, startFresh;
       if (!this.lootlocker.sessionToken) {
         return;
       }
       playerName = this.nameInput.value.trim() || 'Anonymous';
-      localStorage.setItem('playerName', playerName);
       this.submitScoreBtn.disabled = true;
       this.leaderboardStatus.textContent = 'Submitting score...';
-      return this.lootlocker.setName(playerName).then(() => {
+      // If player changed their name, start a new session (creates new leaderboard entry)
+      nameChanged = this.registeredName && playerName !== this.registeredName;
+      startFresh = nameChanged ? this.lootlocker.init() : Promise.resolve();
+      return startFresh.then(() => {
+        return this.lootlocker.setName(playerName);
+      }).then(() => {
         return this.lootlocker.submitScore(this.score);
       }).then((result) => {
+        // Save the name as their registered name for future submissions
+        this.registeredName = playerName;
+        this.playerName = playerName;
+        localStorage.setItem('playerName', playerName);
         this.leaderboardStatus.textContent = `Score submitted! Rank: #${result.rank}`;
         this.submitScoreBtn.style.display = 'none';
         this.nameInput.disabled = true;

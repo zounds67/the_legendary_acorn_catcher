@@ -68,6 +68,7 @@ class Game
       'https://tgb2om7o.api.lootlocker.io'
     )
     @playerName = localStorage.getItem('playerName') or ''
+    @registeredName = @playerName  # The name they've already submitted scores with
 
     # Leaderboard UI elements
     @leaderboardList = document.getElementById('leaderboard-list')
@@ -474,14 +475,21 @@ class Game
     return unless @lootlocker.sessionToken
 
     playerName = @nameInput.value.trim() or 'Anonymous'
-    localStorage.setItem 'playerName', playerName
-
     @submitScoreBtn.disabled = true
     @leaderboardStatus.textContent = 'Submitting score...'
 
-    @lootlocker.setName(playerName)
+    # If player changed their name, start a new session (creates new leaderboard entry)
+    nameChanged = @registeredName and playerName isnt @registeredName
+    startFresh = if nameChanged then @lootlocker.init() else Promise.resolve()
+
+    startFresh
+    .then => @lootlocker.setName(playerName)
     .then => @lootlocker.submitScore(@score)
     .then (result) =>
+      # Save the name as their registered name for future submissions
+      @registeredName = playerName
+      @playerName = playerName
+      localStorage.setItem 'playerName', playerName
       @leaderboardStatus.textContent = "Score submitted! Rank: ##{result.rank}"
       @submitScoreBtn.style.display = 'none'
       @nameInput.disabled = true
