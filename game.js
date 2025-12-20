@@ -622,20 +622,30 @@
     //     # now call @addToLeaderboard with rank, name, and score
     // ============================================================
     displayLeaderboard(entries) {
+      var e, j, len, pn, rank, results, score;
       this.leaderboardList.innerHTML = '';
       if (entries.length === 0) {
         this.leaderboardList.innerHTML = '<li class="no-scores">No scores yet. Be the first!</li>';
+        return;
       }
+// YOUR CODE HERE
+// Hint: Use "for entry in entries" to loop through all the scores
+// Hint: Get the rank with entry.rank
+// Hint: Get the name with entry.player.name
+// Hint: Get the score with entry.score
+// Hint: Call @addToLeaderboard(rank, name, score) to show each one
+      results = [];
+      for (j = 0, len = entries.length; j < len; j++) {
+        e = entries[j];
+        rank = e.rank;
+        pn = e.player.name;
+        score = e.score;
+        results.push(this.addToLeaderboard(rank, pn, score));
+      }
+      return results;
     }
 
-    // YOUR CODE HERE
-    // Hint: Use "for entry in entries" to loop through all the scores
-    // Hint: Get the rank with entry.rank
-    // Hint: Get the name with entry.player.name
-    // Hint: Get the score with entry.score
-    // Hint: Call @addToLeaderboard(rank, name, score) to show each one
-
-      // This helper function adds one entry to the leaderboard display
+    // This helper function adds one entry to the leaderboard display
     // (You don't need to change this - just call it from above!)
     addToLeaderboard(rank, name, score) {
       var li, nameSpan, rankSpan, scoreSpan;

@@ -534,6 +534,12 @@ class Game
     # Hint: Get the name with entry.player.name
     # Hint: Get the score with entry.score
     # Hint: Call @addToLeaderboard(rank, name, score) to show each one
+    for e in entries
+      rank = e.rank
+      pn = e.player.name
+      score = e.score
+      @addToLeaderboard(rank,pn,score)
+
 
   # This helper function adds one entry to the leaderboard display
   # (You don't need to change this - just call it from above!)
