@@ -665,13 +665,13 @@ class Game
     # When you let go of the mouse, stop moving right
     rightBtn.addEventListener 'mouseup', => @stopMovingRight()
     # When your mouse leaves the button, stop moving right
-    rightBtn.addEventListener 'mouseleave', => @stopmovingright()
+    rightBtn.addEventListener 'mouseleave', => @stopMovingRight()
     # When you touch the button (on tablet/phone), opmstart moving right
     rightBtn.addEventListener 'touchstart', (e) =>
       e.preventDefault()
       @startMovingRight()
     # When you lift your finger, stop moving right
-    rightBtn.addEventListener 'touchend', => @stopmovingright()
+    rightBtn.addEventListener 'touchend', => @stopMovingRight()
 
 
   # ============================================================

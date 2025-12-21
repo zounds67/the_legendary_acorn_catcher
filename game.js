@@ -781,7 +781,7 @@
       });
       // When your mouse leaves the button, stop moving right
       rightBtn.addEventListener('mouseleave', () => {
-        return this.stopmovingright();
+        return this.stopMovingRight();
       });
       // When you touch the button (on tablet/phone), opmstart moving right
       rightBtn.addEventListener('touchstart', (e) => {
@@ -790,7 +790,7 @@
       });
       // When you lift your finger, stop moving right
       return rightBtn.addEventListener('touchend', () => {
-        return this.stopmovingright();
+        return this.stopMovingRight();
       });
     }
 
