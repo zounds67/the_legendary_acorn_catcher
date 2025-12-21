@@ -134,6 +134,9 @@ class Game
         when 'ArrowRight', 'd'
           @keys.right = false
 
+    # Set up touch controls (see setupTouchControls below!)
+    @setupTouchControls()
+
   # ============================================================
   # FUNCTION 1: Move Totoro
   # ============================================================
@@ -571,6 +574,105 @@ class Game
     li.appendChild nameSpan
     li.appendChild scoreSpan
     @leaderboardList.appendChild li
+
+  # ============================================================
+  # FUNCTION 8: Touch Control Functions
+  # ============================================================
+  # These 4 functions let you play on a tablet or phone!
+  #
+  # HOW IT WORKS:
+  # - The LEFT and RIGHT buttons on the screen call these functions
+  # - When you press a button, it calls the "start" function
+  # - When you let go, it calls the "stop" function
+  # - @keys.left and @keys.right are true/false values
+  # - Setting them to true makes Totoro move!
+  #
+  # WHAT TO DO:
+  # - startMovingLeft should set @keys.left to true
+  # - stopMovingLeft should set @keys.left to false
+  # - startMovingRight should set @keys.right to true
+  # - stopMovingRight should set @keys.right to false
+  #
+  # EXAMPLE:
+  #   To set a value to true:  @keys.left = true
+  #   To set a value to false: @keys.left = false
+  # ============================================================
+
+  # When you press the LEFT button, start moving left
+  startMovingLeft: ->
+    # YOUR CODE HERE (1 line)
+
+
+  # When you let go of the LEFT button, stop moving left
+  stopMovingLeft: ->
+    # YOUR CODE HERE (1 line)
+
+
+  # When you press the RIGHT button, start moving right
+  startMovingRight: ->
+    # YOUR CODE HERE (1 line)
+
+
+  # When you let go of the RIGHT button, stop moving right
+  stopMovingRight: ->
+    # YOUR CODE HERE (1 line)
+
+
+  # ============================================================
+  # FUNCTION 9: Connect the Buttons to the Functions
+  # ============================================================
+  # This function connects the LEFT and RIGHT buttons to your functions!
+  #
+  # HOW IT WORKS:
+  # - leftBtn is the LEFT button on the screen
+  # - rightBtn is the RIGHT button on the screen
+  # - 'mousedown' happens when you click the mouse button down
+  # - 'mouseup' happens when you let go of the mouse button
+  # - 'mouseleave' happens when your mouse leaves the button
+  # - 'touchstart' happens when you touch the screen (tablet/phone)
+  # - 'touchend' happens when you lift your finger
+  #
+  # WHAT TO DO:
+  # - When mousedown or touchstart on LEFT button: call @startMovingLeft()
+  # - When mouseup, mouseleave, or touchend on LEFT button: call @stopMovingLeft()
+  # - When mousedown or touchstart on RIGHT button: call @startMovingRight()
+  # - When mouseup, mouseleave, or touchend on RIGHT button: call @stopMovingRight()
+  #
+  # EXAMPLE:
+  #   leftBtn.addEventListener 'mousedown', => @startMovingLeft()
+  # ============================================================
+  setupTouchControls: ->
+    leftBtn = document.getElementById('left-btn')
+    rightBtn = document.getElementById('right-btn')
+
+    # LEFT BUTTON
+    # When you click down on the left button, start moving left
+    leftBtn.addEventListener 'mousedown', => # YOUR CODE HERE - call the function to start moving left
+    # When you let go of the mouse, stop moving left
+    leftBtn.addEventListener 'mouseup', => # YOUR CODE HERE - call the function to stop moving left
+    # When your mouse leaves the button, stop moving left
+    leftBtn.addEventListener 'mouseleave', => # YOUR CODE HERE - call the function to stop moving left
+    # When you touch the button (on tablet/phone), start moving left
+    leftBtn.addEventListener 'touchstart', (e) =>
+      e.preventDefault()
+      # YOUR CODE HERE - call the function to start moving left
+    # When you lift your finger, stop moving left
+    leftBtn.addEventListener 'touchend', => # YOUR CODE HERE - call the function to stop moving left
+
+    # RIGHT BUTTON
+    # When you click down on the right button, start moving right
+    rightBtn.addEventListener 'mousedown', => # YOUR CODE HERE - call the function to start moving right
+    # When you let go of the mouse, stop moving right
+    rightBtn.addEventListener 'mouseup', => # YOUR CODE HERE - call the function to stop moving right
+    # When your mouse leaves the button, stop moving right
+    rightBtn.addEventListener 'mouseleave', => # YOUR CODE HERE - call the function to stop moving right
+    # When you touch the button (on tablet/phone), start moving right
+    rightBtn.addEventListener 'touchstart', (e) =>
+      e.preventDefault()
+      # YOUR CODE HERE - call the function to start moving right
+    # When you lift your finger, stop moving right
+    rightBtn.addEventListener 'touchend', => # YOUR CODE HERE - call the function to stop moving right
+
 
   # ============================================================
   # All the drawing code below - you don't need to change this!
