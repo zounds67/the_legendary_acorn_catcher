@@ -170,7 +170,7 @@
             return e.preventDefault();
         }
       });
-      return document.addEventListener('keyup', (e) => {
+      document.addEventListener('keyup', (e) => {
         switch (e.key) {
           case 'ArrowLeft':
           case 'a':
@@ -180,6 +180,8 @@
             return this.keys.right = false;
         }
       });
+      // Set up touch controls (see setupTouchControls below!)
+      return this.setupTouchControls();
     }
 
     // ============================================================
@@ -674,6 +676,122 @@
       li.appendChild(nameSpan);
       li.appendChild(scoreSpan);
       return this.leaderboardList.appendChild(li);
+    }
+
+    // ============================================================
+    // FUNCTION 8: Touch Control Functions
+    // ============================================================
+    // These 4 functions let you play on a tablet or phone!
+
+    // HOW IT WORKS:
+    // - The LEFT and RIGHT buttons on the screen call these functions
+    // - When you press a button, it calls the "start" function
+    // - When you let go, it calls the "stop" function
+    // - @keys.left and @keys.right are true/false values
+    // - Setting them to true makes Totoro move!
+
+    // WHAT TO DO:
+    // - startMovingLeft should set @keys.left to true
+    // - stopMovingLeft should set @keys.left to false
+    // - startMovingRight should set @keys.right to true
+    // - stopMovingRight should set @keys.right to false
+
+    // EXAMPLE:
+    //   To set a value to true:  @keys.left = true
+    //   To set a value to false: @keys.left = false
+    // ============================================================
+
+      // When you press the LEFT button, start moving left
+    startMovingLeft() {
+      return this.keys.left = true;
+    }
+
+    // When you let go of the LEFT button, stop moving left
+    stopMovingLeft() {
+      return this.keys.left = false;
+    }
+
+    // When you press the RIGHT button, start moving right
+    startMovingRight() {
+      return this.keys.right = true;
+    }
+
+    // When you let go of the RIGHT button, stop moving right
+    stopMovingRight() {
+      return this.keys.right = false;
+    }
+
+    // ============================================================
+    // FUNCTION 9: Connect the Buttons to the Functions
+    // ============================================================
+    // This function connects the LEFT and RIGHT buttons to your functions!
+
+    // HOW IT WORKS:
+    // - leftBtn is the LEFT button on the screen
+    // - rightBtn is the RIGHT button on the screen
+    // - 'mousedown' happens when you click the mouse button down
+    // - 'mouseup' happens when you let go of the mouse button
+    // - 'mouseleave' happens when your mouse leaves the button
+    // - 'touchstart' happens when you touch the screen (tablet/phone)
+    // - 'touchend' happens when you lift your finger
+
+    // WHAT TO DO:
+    // - When mousedown or touchstart on LEFT button: call @startMovingLeft()
+    // - When mouseup, mouseleave, or touchend on LEFT button: call @stopMovingLeft()
+    // - When mousedown or touchstart on RIGHT button: call @startMovingRight()
+    // - When mouseup, mouseleave, or touchend on RIGHT button: call @stopMovingRight()
+
+    // EXAMPLE:
+    //   leftBtn.addEventListener 'mousedown', => @startMovingLeft()
+    // ============================================================
+    setupTouchControls() {
+      var leftBtn, rightBtn;
+      leftBtn = document.getElementById('left-btn');
+      rightBtn = document.getElementById('right-btn');
+      // LEFT BUTTON
+      // When you click down on the left button, start moving left
+      leftBtn.addEventListener('mousedown', () => {
+        return this.startMovingLeft();
+      });
+      // When you let go of the mouse, stop moving left
+      leftBtn.addEventListener('mouseup', () => {
+        return this.stopMovingLeft();
+      });
+      // When your mouse leaves the button, stop moving left
+      leftBtn.addEventListener('mouseleave', () => {
+        return this.stopMovingLeft();
+      });
+      // When you touch the button (on tablet/phone), start moving left
+      leftBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        return this.startMovingLeft();
+      });
+      // When you lift your finger, stop moving left
+      leftBtn.addEventListener('touchend', () => {
+        return this.stopMovingLeft();
+      });
+      // RIGHT BUTTON
+      // When you click down on the right button, start moving right
+      rightBtn.addEventListener('mousedown', () => {
+        return this.startMovingRight();
+      });
+      // When you let go of the mouse, stop moving right
+      rightBtn.addEventListener('mouseup', () => {
+        return this.stopMovingRight();
+      });
+      // When your mouse leaves the button, stop moving right
+      rightBtn.addEventListener('mouseleave', () => {
+        return this.stopmovingright();
+      });
+      // When you touch the button (on tablet/phone), opmstart moving right
+      rightBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        return this.startMovingRight();
+      });
+      // When you lift your finger, stop moving right
+      return rightBtn.addEventListener('touchend', () => {
+        return this.stopmovingright();
+      });
     }
 
     // ============================================================
