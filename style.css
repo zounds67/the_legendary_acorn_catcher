@@ -66,6 +66,8 @@ h1 {
     display: block;
     margin: 0 auto;
     background: #87CEEB;
+    max-width: 100%;
+    height: auto;
 }
 
 #game-over {
