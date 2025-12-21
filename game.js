@@ -702,26 +702,26 @@
     // ============================================================
 
       // When you press the LEFT button, start moving left
-    startMovingLeft() {}
+    startMovingLeft() {
+      return this.keys.left = true;
+    }
 
-    // YOUR CODE HERE (1 line)
+    // When you let go of the LEFT button, stop moving left
+    stopMovingLeft() {
+      return this.keys.left = false;
+    }
 
-      // When you let go of the LEFT button, stop moving left
-    stopMovingLeft() {}
+    // When you press the RIGHT button, start moving right
+    startMovingRight() {
+      return this.keys.right = true;
+    }
 
-    // YOUR CODE HERE (1 line)
+    // When you let go of the RIGHT button, stop moving right
+    stopMovingRight() {
+      return this.keys.right = false;
+    }
 
-      // When you press the RIGHT button, start moving right
-    startMovingRight() {}
-
-    // YOUR CODE HERE (1 line)
-
-      // When you let go of the RIGHT button, stop moving right
-    stopMovingRight() {}
-
-    // YOUR CODE HERE (1 line)
-
-      // ============================================================
+    // ============================================================
     // FUNCTION 9: Connect the Buttons to the Functions
     // ============================================================
     // This function connects the LEFT and RIGHT buttons to your functions!
@@ -750,37 +750,51 @@
       rightBtn = document.getElementById('right-btn');
       // LEFT BUTTON
       // When you click down on the left button, start moving left
-      leftBtn.addEventListener('mousedown', () => {}); // YOUR CODE HERE - call the function to start moving left
+      leftBtn.addEventListener('mousedown', () => {
+        return this.startMovingLeft();
+      });
       // When you let go of the mouse, stop moving left
-      leftBtn.addEventListener('mouseup', () => {}); // YOUR CODE HERE - call the function to stop moving left
+      leftBtn.addEventListener('mouseup', () => {
+        return this.stopMovingLeft();
+      });
       // When your mouse leaves the button, stop moving left
-      leftBtn.addEventListener('mouseleave', () => {}); // YOUR CODE HERE - call the function to stop moving left
+      leftBtn.addEventListener('mouseleave', () => {
+        return this.stopMovingLeft();
+      });
       // When you touch the button (on tablet/phone), start moving left
       leftBtn.addEventListener('touchstart', (e) => {
-        return e.preventDefault();
+        e.preventDefault();
+        return this.startMovingLeft();
       });
-      // YOUR CODE HERE - call the function to start moving left
       // When you lift your finger, stop moving left
-      leftBtn.addEventListener('touchend', () => {}); // YOUR CODE HERE - call the function to stop moving left
-      
+      leftBtn.addEventListener('touchend', () => {
+        return this.stopMovingLeft();
+      });
       // RIGHT BUTTON
       // When you click down on the right button, start moving right
-      rightBtn.addEventListener('mousedown', () => {}); // YOUR CODE HERE - call the function to start moving right
-      // When you let go of the mouse, stop moving right
-      rightBtn.addEventListener('mouseup', () => {}); // YOUR CODE HERE - call the function to stop moving right
-      // When your mouse leaves the button, stop moving right
-      rightBtn.addEventListener('mouseleave', () => {}); // YOUR CODE HERE - call the function to stop moving right
-      // When you touch the button (on tablet/phone), start moving right
-      rightBtn.addEventListener('touchstart', (e) => {
-        return e.preventDefault();
+      rightBtn.addEventListener('mousedown', () => {
+        return this.startMovingRight();
       });
-      // YOUR CODE HERE - call the function to start moving right
+      // When you let go of the mouse, stop moving right
+      rightBtn.addEventListener('mouseup', () => {
+        return this.stopMovingRight();
+      });
+      // When your mouse leaves the button, stop moving right
+      rightBtn.addEventListener('mouseleave', () => {
+        return this.stopmovingright();
+      });
+      // When you touch the button (on tablet/phone), opmstart moving right
+      rightBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        return this.startMovingRight();
+      });
       // When you lift your finger, stop moving right
-      return rightBtn.addEventListener('touchend', () => {}); // YOUR CODE HERE - call the function to stop moving right
+      return rightBtn.addEventListener('touchend', () => {
+        return this.stopmovingright();
+      });
     }
 
-    
-      // ============================================================
+    // ============================================================
     // All the drawing code below - you don't need to change this!
     // ============================================================
     draw() {

@@ -600,22 +600,22 @@ class Game
 
   # When you press the LEFT button, start moving left
   startMovingLeft: ->
-    # YOUR CODE HERE (1 line)
+    @keys.left = true
 
 
   # When you let go of the LEFT button, stop moving left
   stopMovingLeft: ->
-    # YOUR CODE HERE (1 line)
+    @keys.left = false
 
 
   # When you press the RIGHT button, start moving right
   startMovingRight: ->
-    # YOUR CODE HERE (1 line)
+    @keys.right = true
 
 
   # When you let go of the RIGHT button, stop moving right
   stopMovingRight: ->
-    # YOUR CODE HERE (1 line)
+    @keys.right = false
 
 
   # ============================================================
@@ -647,31 +647,31 @@ class Game
 
     # LEFT BUTTON
     # When you click down on the left button, start moving left
-    leftBtn.addEventListener 'mousedown', => # YOUR CODE HERE - call the function to start moving left
+    leftBtn.addEventListener 'mousedown', => @startMovingLeft()
     # When you let go of the mouse, stop moving left
-    leftBtn.addEventListener 'mouseup', => # YOUR CODE HERE - call the function to stop moving left
+    leftBtn.addEventListener 'mouseup', => @stopMovingLeft()
     # When your mouse leaves the button, stop moving left
-    leftBtn.addEventListener 'mouseleave', => # YOUR CODE HERE - call the function to stop moving left
+    leftBtn.addEventListener 'mouseleave', => @stopMovingLeft()
     # When you touch the button (on tablet/phone), start moving left
-    leftBtn.addEventListener 'touchstart', (e) =>
+    leftBtn.addEventListener 'touchstart', (e) => 
       e.preventDefault()
-      # YOUR CODE HERE - call the function to start moving left
+      @startMovingLeft()
     # When you lift your finger, stop moving left
-    leftBtn.addEventListener 'touchend', => # YOUR CODE HERE - call the function to stop moving left
+    leftBtn.addEventListener 'touchend', => @stopMovingLeft()
 
     # RIGHT BUTTON
     # When you click down on the right button, start moving right
-    rightBtn.addEventListener 'mousedown', => # YOUR CODE HERE - call the function to start moving right
+    rightBtn.addEventListener 'mousedown', => @startMovingRight()
     # When you let go of the mouse, stop moving right
-    rightBtn.addEventListener 'mouseup', => # YOUR CODE HERE - call the function to stop moving right
+    rightBtn.addEventListener 'mouseup', => @stopMovingRight()
     # When your mouse leaves the button, stop moving right
-    rightBtn.addEventListener 'mouseleave', => # YOUR CODE HERE - call the function to stop moving right
-    # When you touch the button (on tablet/phone), start moving right
+    rightBtn.addEventListener 'mouseleave', => @stopmovingright()
+    # When you touch the button (on tablet/phone), opmstart moving right
     rightBtn.addEventListener 'touchstart', (e) =>
       e.preventDefault()
-      # YOUR CODE HERE - call the function to start moving right
+      @startMovingRight()
     # When you lift your finger, stop moving right
-    rightBtn.addEventListener 'touchend', => # YOUR CODE HERE - call the function to stop moving right
+    rightBtn.addEventListener 'touchend', => @stopmovingright()
 
 
   # ============================================================
