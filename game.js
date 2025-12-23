@@ -72,7 +72,7 @@
     }
 
     getScores() {
-      return fetch(`${this.apiDomain}/game/leaderboards/${this.leaderboardKey}/list?count=10`, {
+      return fetch(`${this.apiDomain}/game/leaderboards/${this.leaderboardKey}/list?count=20`, {
         method: "GET",
         headers: {
           "x-session-token": this.sessionToken
