@@ -44,7 +44,7 @@ class LootLocker
     .then (response) -> response.json()
 
   getScores: ->
-    fetch "#{@apiDomain}/game/leaderboards/#{@leaderboardKey}/list?count=10",
+    fetch "#{@apiDomain}/game/leaderboards/#{@leaderboardKey}/list?count=20",
       method: "GET"
       headers: { "x-session-token": @sessionToken }
     .then (response) -> response.json()
