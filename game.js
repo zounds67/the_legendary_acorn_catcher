@@ -11,7 +11,8 @@
   // ============================================================
   // LootLocker Leaderboard Class - Simple API wrapper
   // ============================================================
-  var Game, LootLocker;
+  var Game, LootLocker,
+    indexOf = [].indexOf;
 
   LootLocker = class LootLocker {
     constructor(apiKey, leaderboardKey, apiDomain) {
@@ -72,7 +73,7 @@
     }
 
     getScores() {
-      return fetch(`${this.apiDomain}/game/leaderboards/${this.leaderboardKey}/list?count=20`, {
+      return fetch(`${this.apiDomain}/game/leaderboards/${this.leaderboardKey}/list?count=100`, {
         method: "GET",
         headers: {
           "x-session-token": this.sessionToken
@@ -634,25 +635,35 @@
     //     # now call @addToLeaderboard with rank, name, and score
     // ============================================================
     displayLeaderboard(entries) {
-      var e, j, len, pn, rank, results, score;
+      var betterRank, e, j, len, namesSeen, pn, rank, results, score;
       this.leaderboardList.innerHTML = '';
       if (entries.length === 0) {
         this.leaderboardList.innerHTML = '<li class="no-scores">No scores yet. Be the first!</li>';
         return;
       }
-// YOUR CODE HERE
-// Hint: Use "for entry in entries" to loop through all the scores
-// Hint: Get the rank with entry.rank
-// Hint: Get the name with entry.player.name
-// Hint: Get the score with entry.score
-// Hint: Call @addToLeaderboard(rank, name, score) to show each one
+      // YOUR CODE HERE
+      // Hint: Use "for entry in entries" to loop through all the scores
+      // Hint: Get the rank with entry.rank
+      // Hint: Get the name with entry.player.name
+      // Hint: Get the score with entry.score
+      // Hint: Call @addToLeaderboard(rank, name, score) to show each one
+      // Create a new array of seenNames 
+      namesSeen = [];
+      // Keep track of current rank
+      betterRank = 0;
       results = [];
       for (j = 0, len = entries.length; j < len; j++) {
         e = entries[j];
         rank = e.rank;
         pn = e.player.name;
         score = e.score;
-        results.push(this.addToLeaderboard(rank, pn, score));
+        if (indexOf.call(namesSeen, pn) < 0 && betterRank < 25) {
+          namesSeen.push(pn);
+          betterRank = betterRank + 1;
+          results.push(this.addToLeaderboard(betterRank, pn, score));
+        } else {
+          results.push(void 0);
+        }
       }
       return results;
     }

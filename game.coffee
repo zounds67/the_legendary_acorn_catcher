@@ -44,7 +44,7 @@ class LootLocker
     .then (response) -> response.json()
 
   getScores: ->
-    fetch "#{@apiDomain}/game/leaderboards/#{@leaderboardKey}/list?count=20",
+    fetch "#{@apiDomain}/game/leaderboards/#{@leaderboardKey}/list?count=100",
       method: "GET"
       headers: { "x-session-token": @sessionToken }
     .then (response) -> response.json()
@@ -545,11 +545,18 @@ class Game
     # Hint: Get the name with entry.player.name
     # Hint: Get the score with entry.score
     # Hint: Call @addToLeaderboard(rank, name, score) to show each one
+    # Create a new array of seenNames 
+    namesSeen = []
+    # Keep track of current rank
+    betterRank = 0
     for e in entries
       rank = e.rank
       pn = e.player.name
       score = e.score
-      @addToLeaderboard(rank,pn,score)
+      if pn not in namesSeen and betterRank < 25
+        namesSeen.push pn
+        betterRank = betterRank + 1
+        @addToLeaderboard(betterRank,pn,score)
 
 
   # This helper function adds one entry to the leaderboard display
